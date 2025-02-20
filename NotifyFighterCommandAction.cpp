@@ -1,13 +1,10 @@
 #include "NotifyFighterCommandAction.h"
-class NotifyFighterCommandAction :
-    public Action
+
+void NotifyFighterCommandAction::onNewAircraft(Aircraft* aicraft)
 {
-public:
-    void onNewAircraft(Aircraft* aicraft) {
+}
 
-    }
-protected:
-    void internalUpdate(Aircraft& aircraft) {
+void NotifyFighterCommandAction::internalUpdate(Aircraft& aircraft)
+{
+}
 
-    }
-};
