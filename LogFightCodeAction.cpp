@@ -1,13 +1,11 @@
 #include "LogFightCodeAction.h"
-class LogFightCodeAction :
-    public Action
+;
+
+void LogFightCodeAction::onNewAircraft(Aircraft* aicraft)
 {
-public:
-    void onNewAircraft(Aircraft* aicraft) {
+}
 
-    }
-protected:
-    void internalUpdate(Aircraft& aircraft) {
+void LogFightCodeAction::internalUpdate(Aircraft& aircraft)
+{
+}
 
-    }
-};

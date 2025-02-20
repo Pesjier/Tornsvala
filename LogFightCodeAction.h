@@ -4,12 +4,8 @@ class LogFightCodeAction :
     public Action
 {
 public:
-    void onNewAircraft(Aircraft* aicraft) {
-
-    }
+    void onNewAircraft(Aircraft* aicraft);
 protected:
-    void internalUpdate(Aircraft& aircraft) {
-
-    }
+    void internalUpdate(Aircraft& aircraft);
 };
 
