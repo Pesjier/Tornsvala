@@ -1,30 +1,72 @@
 #include "Tornsvala.h"
+#include "Aircraft.h"
+#include "AircraftFactory.h"
 
 Tornsvala::Tornsvala()
 {
-	//Load aircraftTypes
+	//Could load these from file but whatever
+	aircraftTypes = { "Avro Lancaster",
+		"Bristol Blenheim",
+		"DH 98 Mosquito",
+		"Hawker Hurricane",
+		"Supermarine Spitfire",
+		"Messerschmitt BF109",
+		"Focke-Wulf FW190",
+		"Dornier Do-217",
+		"Heinkel HE-177",
+		"Junker Ju-87 Stuka" };
+
 	//Load aircraftCollection
+	storage.LoadAircraft("aircraft.aircraft", aircraft, responder);
 }
 
 Tornsvala::~Tornsvala()
 {
 	//Save aircraftCollection
+	storage.SaveAircraft("aircraft.aircraft", aircraft);
 }
 
-const char* Tornsvala::seen(const std::string& tailcode)
+std::string Tornsvala::seen(const std::string& tailcode)
 {
-	//Sees aircraft with tailcode
-	//If new, tell user to specify type aswell, then nothing more
-	//Else, notify on aircraft and send back message with which actions responded to it
-	return "Ok";
+	const std::vector<Aircraft*>& allAircraft = aircraft.getAircraft();
+	for (int i = 0; i < allAircraft.size(); i++)
+	{
+		if (*allAircraft[i] == tailcode)
+		{
+			Aircraft& seenAircraft = (*allAircraft[i]);
+			return "Existing Aircraft " + seenAircraft.getTypeAndCode() + seenAircraft.notify();
+		}
+	}
+
+	return "This is a new aircraft.\nPlease add the type to your observation : 'seen G-CFGJ «aircraft-type»'";
 }
 
-const char* Tornsvala::seen(const std::string& tailcode, const std::string& type)
+std::string Tornsvala::seen(const std::string& tailcode, const std::string& type)
 {	
-	//Sees aircraft with tailcode
-	//If new, add to list etc. Message that we added to collection
-	//Then notify on aircraft and send back message with which actions responded to it
-	return "Ok";
+	const std::vector<Aircraft*>& allAircraft = aircraft.getAircraft();
+	for (int i = 0; i < allAircraft.size(); i++)
+	{
+		if (*allAircraft[i] == tailcode)
+		{
+			Aircraft& seenAircraft = (*allAircraft[i]);
+			return "Existing Aircraft " + seenAircraft.getTypeAndCode() + seenAircraft.notify();
+		}
+	}
+
+	for (int i = 0; i < aircraftTypes.size(); i++)
+	{
+		if (aircraftTypes[i] == type)
+		{
+			Aircraft& newAircraft = *AircraftFactory::Instance().CreateAircraft(tailcode, type);
+			aircraft.addAircraft(&newAircraft);
+
+			responder.onNewAircraft(newAircraft);
+
+			return "Added " + newAircraft.getTypeAndCode() + " to Collection" + newAircraft.notify();
+		}
+	}
+
+	return "That aircraft type is not supported!";
 }
 
 const std::vector<std::string>& Tornsvala::listType()
@@ -34,12 +76,22 @@ const std::vector<std::string>& Tornsvala::listType()
 
 std::vector<std::string> Tornsvala::listAircraft()
 {
-	//Convert aircraftCollection list to string list of tailcodes
-	return std::vector<std::string>();
+	const std::vector<Aircraft*>& allAircraft = aircraft.getAircraft();
+	std::vector<std::string> allAircraftInText;
+
+	for (int i = 0; i < allAircraft.size(); i++)
+	{
+		allAircraftInText.push_back(allAircraft[i]->getTypeAndCode());
+	}
+
+	return allAircraftInText;
 }
 
-const char* Tornsvala::info(const std::string& tailcode)
+std::string Tornsvala::info(const std::string& tailcode)
 {
-	//Return info of aircraft with the tailcode
-	return "Ok";
+	if (aircraft.hasAicraft(tailcode))
+	{
+		return aircraft.getAircraft(tailcode)->getInfo();
+	}
+	return "That aircraft has not been seen.";
 }

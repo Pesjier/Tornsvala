@@ -1,19 +1,9 @@
 #include "AircraftCollection.h"
-
-void AircraftCollection::add(string tailcode, string type)
-{
-
-
-}
+#include "Aircraft.h"
 
 void AircraftCollection::addAircraft(Aircraft* craft)
 {
-	for (int i = 0; i < aircraft.size(); i++) {
-		if (aircraft[i] != craft) {
-			aircraft.push_back(craft);
-			break;
-		}
-	}
+	aircraft.push_back(craft);
 }
 
 void AircraftCollection::remove(string tailcode)
@@ -21,38 +11,45 @@ void AircraftCollection::remove(string tailcode)
 	for (int i = 0; i < aircraft.size(); i++) {
 		if ((*aircraft[i]).getTailcode() == tailcode) {
 			aircraft[i] = aircraft[aircraft.size() - 1];
-			aircraft.pop_back(tailcode);
+			aircraft.pop_back();
+			break;
 		}
-}
+	}
 }
 
 bool AircraftCollection::hasAicraft(string tailcode)
 {
 	for (int z = 0; z < aircraft.size(); z++) {
-		if ((*aircraft).getTailcode == tailcode) {
+		if ((*aircraft[z]) == tailcode) {
 			return true;
-		}
-		else {
-			return false;
 		}
 	}
 	return false;
 }
 
-const string AircraftCollection::getAircraft(string tailcode)
+Aircraft* AircraftCollection::getAircraft(const string& tailcode)
 {
 	for (int k = 0; k < aircraft.size(); k++) {
-		if ((*aircraft[k]).getTailcode() == tailcode) {
-			return tailcode;
+		if (*aircraft[k] == tailcode) {
+			return aircraft[k];
 		}
 	}
+	return nullptr;
 }
 
-const void AircraftCollection::getAircraft()
+AircraftCollection::~AircraftCollection()
 {
-	for (int j = 0; j < aircraft.size(); j++) {
-		cout << aircraft[j] << endl;
+	for (int i = 0; i < aircraft.size(); i++)
+	{
+		delete aircraft[i];
+		aircraft[i] = nullptr;
 	}
+	aircraft.clear();
+}
+
+const vector<Aircraft*> AircraftCollection::getAircraft()
+{
+	return aircraft;
 }
 
 

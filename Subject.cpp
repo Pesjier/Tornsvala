@@ -19,10 +19,12 @@ void Subject::removeObserver(Observer* observer)
 	}
 }
 
-void Subject::notify()
+std::string Subject::notify()
 {
+	std::string message = "";
 	for (int i = 0; i < myObservers.size(); i++)
 	{
-		myObservers[i]->Update(this);
+		message += "\n" + myObservers[i]->Update(this);
 	}
+	return message;
 }

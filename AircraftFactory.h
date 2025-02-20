@@ -1,6 +1,8 @@
 #pragma once
 #include <string>
 
+class Aircraft;
+
 class AircraftFactory
 {
 public:
@@ -11,7 +13,7 @@ public:
 		return instance;
 	}
 
-	//Aircraft* CreateAircraft(const std::string& tailcode, const std::string& type);
+	Aircraft* CreateAircraft(const std::string& tailcode, const std::string& type);
 
 private:
 	AircraftFactory();

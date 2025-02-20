@@ -7,13 +7,13 @@ class Aircraft;
 class AircraftCollection
 {
 private:
-	vector<Aircraft> aircraft;
+	vector<Aircraft*> aircraft;
 public:
-	void add(string tailcode, string type);
 	void addAircraft(Aircraft* aircraft);
 	void remove(string tailcode);
 	bool hasAicraft(string tailcode);
-	const void getAircraft(string tailcode);
-	const string getAircraft();
+	const vector<Aircraft*> getAircraft();
+	Aircraft* getAircraft(const string& tailcode);
 
+	~AircraftCollection();
 };

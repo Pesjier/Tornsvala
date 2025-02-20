@@ -1,9 +1,10 @@
 #pragma once
+#include <string>
 
 class Subject;
 
 class Observer
 {
 public:
-	virtual void Update(Subject* subject) = 0;
+	virtual std::string Update(Subject* subject) = 0;
 };

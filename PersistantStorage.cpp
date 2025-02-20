@@ -1,18 +1,43 @@
 #include "PersistantStorage.h"
 #include <fstream>
 #include <iostream>
+#include <vector>
+#include "AircraftCollection.h"
+#include "Aircraft.h"
+#include "AircraftFactory.h"
+#include "ActionResponse.h"
+#include <ctime>
+#include <iomanip>
+#include <iostream>
+#include <sstream>
 
-void PersistantStorage::SaveAircraft(const std::string& path, const AircraftCollection& aircraftCollection)
+void PersistantStorage::SaveAircraft(const std::string& path, AircraftCollection& aircraftCollection)
 {
-	std::fstream stream{ path, stream.binary | stream.out };
+	std::ofstream stream;
+	stream.open(path);
 
 	if (stream.is_open())
 	{
-		//Go through list of aircraft
-		//Save to file
+		const std::vector<Aircraft*>& allAircraft = aircraftCollection.getAircraft();
+		int size = allAircraft.size();
 
-		int funnyTest = 16;
-		stream.write(reinterpret_cast<const char*>(&funnyTest), sizeof(funnyTest));
+		stream << size << std::endl;
+		for (int i = 0; i < size; i++)
+		{
+			Aircraft& aircraft = *allAircraft[i];
+			stream << aircraft.getTailcode() << std::endl;
+			stream << aircraft.getType() << std::endl;
+			stream << aircraft.getRouteAndDest() << std::endl;
+
+			time_t timestamp = aircraft.getLastSpotted();
+			char str[26];
+			ctime_s(str, sizeof(str), &timestamp);
+			stream << str << std::endl;
+
+			timestamp = aircraft.getLastSpotted();
+			ctime_s(str, sizeof(str), &timestamp);
+			stream << str << std::endl;
+		}
 		stream.close();
 	}
 	else
@@ -22,23 +47,64 @@ void PersistantStorage::SaveAircraft(const std::string& path, const AircraftColl
 	}
 }
 
-void PersistantStorage::LoadAircraft(const std::string& path, AircraftCollection& aircraftCollection)
+void PersistantStorage::LoadAircraft(const std::string& path, AircraftCollection& aircraftCollection, ActionResponse& responder)
 {
 	//Load file
 
-	std::fstream stream{ path, stream.binary | stream.in };
+	std::ifstream stream;
+	stream.open(path);
+	std::string line;
+	std::vector<std::string>* result = new std::vector<std::string>();
 
 	if (stream.is_open())
 	{
-		//Recreate aircraft, use a factory : )
-		//Add to collection
-
-		int funnyTest = 12;
-		stream.read(reinterpret_cast<char*>(&funnyTest), sizeof(funnyTest));
-
-		std::cout << funnyTest;
-
+		while (std::getline(stream, line))
+		{
+			result->push_back(line);
+		}
 		stream.close();
+
+		int index = 0;
+		int size = std::atoi((*result)[index].c_str());
+		index++;
+
+		for (int i = 0; i < size; i++)
+		{
+			std::string code = "";
+			std::string type = "";
+			std::string dest = "";
+			time_t spotted = 0;
+			time_t notified = 0;
+
+			code = (*result)[index];
+			index++;
+			type = (*result)[index];
+			index++;
+			dest = (*result)[index];
+			index++;
+			string dateString = (*result)[index];
+			std::tm tm = {};
+			istringstream stringStream(dateString);
+
+			stringStream >> get_time(&tm, "%a %b %d %H:%M:%S %Y");
+			spotted = mktime(&tm);
+			index++;
+
+			dateString = (*result)[index];
+			stringStream = istringstream(dateString);
+
+			stringStream >> get_time(&tm, "%a %b %d %H:%M:%S %Y");
+			spotted = mktime(&tm);
+			index++;
+
+			Aircraft* newAircraft = AircraftFactory::Instance().CreateAircraft(code, type);
+			newAircraft->setLastNotified(notified);
+			newAircraft->setLastSpotted(spotted);
+			newAircraft->setRouteAndDest(dest);
+
+			aircraftCollection.addAircraft(newAircraft);
+			responder.onNewAircraft(*newAircraft);
+		}
 	}
 	else
 	{

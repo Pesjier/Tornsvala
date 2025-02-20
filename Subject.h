@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <string>
 
 class Observer;
 
@@ -11,5 +12,5 @@ protected:
 public:
 	void addObserver(Observer* observer);
 	void removeObserver(Observer* observer);
-	void notify();
+	std::string notify();
 };

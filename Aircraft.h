@@ -1,25 +1,36 @@
-#pragma once
 #include <string>
 #include <sstream>
+#include "Subject.h"
 
 using namespace std;
 
-class Aircraft {
+class Aircraft : public Subject
+{
 private:
-    string tailCode;
-    string type;
-    Date lastSpotted;
-    Date lastNotified;
-    RouteAndPredictedDest routeAndDest;
+    string tailCode = "";
+    string type = "";
+    time_t lastSpotted = 0;
+    time_t lastNotified = 0;
+    string routeAndDest = "";
 
 public:
-    Aircraft(const string& getTailcode);
-    Aircraft(const string& getType);
-    Aircraft(const string& getInfo);
+    Aircraft(const string& tailCode, const string& type);
 
-    void setLastSpotted(Date date);
-    void setLastNotified(Date date);
-    void setRouteAndDest(RouteAndPredictedDest routeAndDest);
+    string getTailcode();
+    string getType();
+    string getInfo();
+    string getTypeAndCode();
+    string getRouteAndDest();
+    time_t getLastSpotted();
+    time_t getLastNotified();
 
+    void setLastSpotted(time_t date);
+    void setLastNotified(time_t date);
+    void setRouteAndDest(string routeAndDest);
+
+    bool operator ==(const std::string& string)
+    {
+        return string == tailCode;
+    }
 };
 

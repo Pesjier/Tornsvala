@@ -1,15 +1,18 @@
 #pragma once
+#include <string>
+#include "Observer.h"
+
 class Aircraft;
 class Subject;
-class Action
+class Action : public Observer
 {
 
 public:
-	virtual void onNewAircraft(Aircraft* aircraft) = 0;
+	virtual void onNewAircraft(Aircraft& aircraft) = 0;
 	
-	void update(Subject* subjekt);
+	std::string Update(Subject* subject);
 
 protected:
-	virtual void internalUpdate(Aircraft* aircraft) = 0;
+	virtual std::string internalUpdate(Aircraft& aircraft) = 0;
 };
 
