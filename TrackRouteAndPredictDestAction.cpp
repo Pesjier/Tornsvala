@@ -1,13 +1,10 @@
 #include "TrackRouteAndPredictDestAction.h"
-class TrackRouteAndPredictDestAction :
-    public Action
+
+void TrackRouteAndPredictDestAction::onNewAircraft(Aircraft* aicraft)
 {
-public:
-    void onNewAircraft(Aircraft* aicraft) {
+}
 
-    }
-protected:
-    void internalUpdate(Aircraft& aircraft) {
+void TrackRouteAndPredictDestAction::internalUpdate(Aircraft& aircraft)
+{
+}
 
-    }
-};
