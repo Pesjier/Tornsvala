@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <vector>
+#include "PersistantStorage.h"
 
 class Tornsvala
 {
@@ -8,7 +9,7 @@ private:
 	std::vector<std::string> aircraftTypes;
 	//AircraftCollection aircraft;
 	//ActionResponse responder;
-	//PersistantStorage storage;
+	PersistantStorage storage;
 
 public:
 	const char* seen(const std::string& tailcode);
