@@ -14,6 +14,16 @@ ActionResponse::ActionResponse()
 	actions.push_back(logAction);
 }
 
+ActionResponse::~ActionResponse()
+{
+	for (int i = 0; i < actions.size(); i++)
+	{
+		delete actions[i];
+		actions[i] = nullptr;
+	}
+	actions.clear();
+}
+
 void ActionResponse::onNewAircraft(Aircraft& aircraft)
 {
 	for (int i = 0; i < actions.size(); i++)

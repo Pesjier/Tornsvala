@@ -9,6 +9,7 @@ private:
 	vector<Action*> actions;
 public:
 	ActionResponse();
+	~ActionResponse();
 
 	void onNewAircraft(Aircraft& aircraft);
 };
